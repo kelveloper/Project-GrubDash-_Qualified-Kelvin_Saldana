@@ -20,6 +20,7 @@ function dishExists(req, res, next) {
 }
 //VAILDATION AND ITS ERRORS
 function vaildationForm(req, res, next) {
+  //if validations fail, respond with a status code of 400 and its error message.
   const { data: { name, description, price, image_url } = {} } = req.body
 
   if (!name) {
@@ -56,6 +57,7 @@ function vaildationForm(req, res, next) {
 }
 
 //LIST METHOD
+//This route will respond with a list of all existing dish data.
 function list(req, res) {
   res.json({ data: dishes })
 }
@@ -66,6 +68,7 @@ function read(req,res,next) {
 }
 
 //CREATE METHOD
+//This route will save the dish and respond with the newly created dish.
 function create(req, res) {
   const { data: { name, description, price, image_url} = {} } = req.body;
   const newDish = {
@@ -82,9 +85,11 @@ function create(req, res) {
 //UPDATE METHOD
 function update(req, res, next) {
   const dishId = res.locals.dishId
+  //update the dish where id === :dishId
   const { data: { id, name, description, price, image_url } = {} } = req.body;
   if (id && dishId !== id) {
     next({
+      // return 400 if no matching dish is found.
       status: 400,
       message: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}`,
     })

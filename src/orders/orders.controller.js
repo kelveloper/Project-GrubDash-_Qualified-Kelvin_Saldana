@@ -25,11 +25,13 @@ function orderExists(req, res, next) {
 
 //LIST METHOD
 function list(req, res) {
+  //This route will respond with a list of all existing order data.
   res.json({ data: orders })
 }
 
 //VAILDATION AND ITS ERRORS
 function vaildationForm(req, res, next) {
+  //if validations fail, respond with a status code of 400 and an error message.
   const { data: { deliverTo, mobileNumber, dishes, quantity} = {} } = req.body
 
   if (!deliverTo) {
@@ -73,6 +75,7 @@ function vaildationForm(req, res, next) {
 
 //CREATE METHOD
 function create(req, res) {
+  //This route will save the order and respond with the newly created order.
   const { data: { deliverTo, mobileNumber, dishes, quantity} = {} } = req.body;
   const newOrder = {
     id: { nextId },
@@ -95,6 +98,7 @@ function update(req, res, next) {
   const orderId = res.locals.orderId
   const { data: {id, deliverTo, mobileNumber, dishes, quantity, status } = {} } = req.body;
   if (id && orderId !== id) {
+    //The update validation must include all validation and these errors messages
     next({
       status: 400,
       message: `Order id does not match route id. Dish: ${id}, Route: ${orderId}`,
@@ -136,11 +140,13 @@ function vaildationPending(req, res, next) {
 }
 //DELETE METHOD
 function destroy(req, res, next) {
+  //This route will delete the order where id === :orderId 
   const order = res.locals.order;
   const { orderId } = req.params;
   const index = orders.findIndex((order) => order.id === orderId)
   if (order.status !== 'pending') {
     next({
+      //return 400 with an error message when it's not pending
       status: 400,
       message: 'An order cannot be deleted unless it is pending',
     })
